@@ -2,12 +2,12 @@
 // Created by User on 2/16/2017.
 //
 
-#ifndef SERVER_CLIENT_SOCKET_H
-#define SERVER_CLIENT_SOCKET_H
+#ifndef SOCKET_H
+#define SOCKET_H
 
 #include "lib.h"
 
-#endif //SERVER_CLIENT_SOCKET_H
+ //SERVER_CLIENT_SOCKET_H
 
 using namespace std;
 
@@ -33,3 +33,5 @@ struct Socket{
 	void shutDown();
 
 };
+
+#endif
