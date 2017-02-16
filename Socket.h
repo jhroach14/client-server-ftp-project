@@ -16,8 +16,8 @@ struct Socket{
 	int newSocketFd;
 	unsigned int portNum;
 	char buffer[256];
-	struct sockaddr_in myAddress;
-	struct sockaddr_in peerAddress;
+	sockaddr_in myAddress;
+	sockaddr_in peerAddress;
 	socklen_t socketLength;
 	struct hostent *server;
 

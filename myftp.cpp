@@ -16,8 +16,8 @@ int main(int argc, char* argv[]){
 		printf("Usage %s hostname port\n", argv[0]);
 	}
 
-	Socket * mySocket = new Socket(80);
-	mySocket->connectToServer(argv[1], atoi(argv[2]));
+	Socket * mySocket = new Socket((unsigned int)80);
+	mySocket->connectToServer(argv[0], atoi(argv[1]));
 	string input;
 
 	while(true){

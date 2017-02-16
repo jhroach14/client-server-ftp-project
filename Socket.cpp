@@ -1,4 +1,5 @@
-#include <w32api/psdk_inc/_ip_types.h>
+//#include <w32api/psdk_inc/_ip_types.h>
+#include <sys/types.h>
 #include "Socket.h"
 
 //below methods abstracts socket logic
@@ -87,7 +88,7 @@ void Socket::connectToServer(string domainName, int port) {
 		fatal_error("Invalid host name");
 	}
 
-	(char *) peerAddress.sin_addr.s_addr = server->h_addr_list[0];
+	((char *) peerAddress->sin_addr->s_addr) = server->h_addr_list[0];
 	peerAddress.sin_family = AF_INET;
 	peerAddress.sin_port = htons((uint16_t) port);
 
