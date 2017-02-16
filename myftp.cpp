@@ -4,11 +4,13 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include "Socket.h"
+//#include "Socket.cpp"
 
 int main(int argc, char* argv[]){
 	int sockfd, portNum;
 	ssize_t len;
-	FILE* toSend, toReceive;
+	FILE* sendFile;
+	FILE* receiveFile;
 
 	if(argc < 3){
 		printf("Usage %s hostname port\n", argv[0]);
@@ -21,29 +23,31 @@ int main(int argc, char* argv[]){
 	while(true){
 		cout << "myftp>";
 		cin >> input;
-		if(input.compareTo("quit") == 0){
-			mySocket->close;
+		if(input.compare("quit") == 0){
+			mySocket->shutDown();
 			exit(0);
 		}
-		else if(input.substr(0,3).compareTo("get") == 0){
+		else if(input.substr(0,3).compare("get") == 0){
 			mySocket->sendOutputToServer(input);
-			recv(mySocket, mySocket->buffer, 256, 0);
+			int fileSize = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0);
 			int index = input.find(" ");
 			string fileName = input.substr(index);
-			int fileSize = atoi(mySocket->buffer);
-			toReceive = fopen(fileName, "w");
+			receiveFile = fopen(fileName.c_str(), "w");
 			int remainSize = fileSize;
-			while((len = recv(mySocket, mySocket->buffer, 256, 0) > 0 && remainSize > 0){
-				fwrite(mySocket->buffer, sizeof(char), len, toReceive);
+			while((len = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0) > 0 && remainSize > 0)){
+				fwrite(mySocket->buffer, sizeof(char), len, receiveFile);
 				remainSize -= len;
 			}
-			fclose(toReceive);
+			fclose(receiveFile);
 
 		}
-		else if(input.substr(0,3).compareTo("put") == 0){
+		else if(input.substr(0,3).compare("put") == 0){
 
 		}
-		mySocket->sendOutputToServer(input);
+		else{
+			mySocket->sendOutputToServer(input);
+		}
+		
 
 
 	}
