@@ -30,13 +30,13 @@ int main( int argc, char *argv[]) {
 	//main server loop. Should run until it receives a kill signal from a child
 	while(true){
 
-		mySock->acceptConnection();
+		mySock->acceptConnectionFromClient();
 
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
 
 		if(pId == 0){
 
-			string input = mySock->getInput();
+			string input = mySock->getInputFromClient();
 
 			if(input.compare("kill")){ //shutdown process
 				if(kill(getppid(),-2)==-1){
@@ -51,7 +51,7 @@ int main( int argc, char *argv[]) {
 		}
 
 	}
-
+	mySock->shutDown();
 	return 0;
 }
 

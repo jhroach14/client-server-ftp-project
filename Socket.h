@@ -12,20 +12,24 @@
 using namespace std;
 
 struct Socket{
-	int socketFd;
-	int clientFd;
+	int mySocketFd;
+	int newSocketFd;
 	unsigned int portNum;
 	char buffer[256];
-	struct sockaddr_in serverAddress;
-	struct sockaddr_in clientAddress;
-	socklen_t clientLength;
+	struct sockaddr_in myAddress;
+	struct sockaddr_in peerAddress;
+	socklen_t socketLength;
+	struct hostent *server;
 
 
 	Socket(unsigned int portNum);
 	void bindAndListen();
-	void acceptConnection();
-	string getInput();
-	void toClient(string message);
+	void acceptConnectionFromClient();
+	string getInputFromClient();
+	void sendOutputToClient(string message);
+	string getInputFromServer();
+	void sendOutputToServer(string message);
+	void connectToServer(string domainName, int port);
 	void shutDown();
 
 };
