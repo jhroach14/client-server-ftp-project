@@ -5,11 +5,8 @@ LFLAGS = -Wall $(DEBUG)
 
 compile: myftp.out
 
-myftp.out: myftp.cpp Socket.o
-	$(CC) $(CFLAGS) -o myftp.cpp
-
-Socket.o: Socket.cpp Socket.h
-	$(CC) $(CFLAGS) Socket.cpp
+myftp.out: myftp.cpp Socket.h
+	$(CC) $(CFLAGS) myftp.cpp -o myftp.out
 
 run: 
 	./myftp.out
