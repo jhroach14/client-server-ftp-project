@@ -1,10 +1,5 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <netinet/in.h>
-#include <netdb.h>
+#include "lib.h"
 #include "Socket.h"
-//#include "Socket.cpp"
 
 int main(int argc, char* argv[]){
 	ssize_t len;
@@ -15,10 +10,12 @@ int main(int argc, char* argv[]){
 		printf("Usage %s hostname port\n", argv[0]);
 	}
 
+	//Creates socket
 	Socket * mySocket = new Socket((unsigned int)80);
 	mySocket->connectToServer(argv[0], atoi(argv[1]));
 	string input;
 
+	//"Shell" loop
 	while(true){
 		cout << "myftp>";
 		cin >> input;
@@ -30,6 +27,7 @@ int main(int argc, char* argv[]){
 		if(found != string::npos){
 			char* inputArr = new char[input.length() + 1];
 			string firstWord(strtok(inputArr, " "));
+			
 			if(firstWord.compare("get") == 0){
 				int index = input.find(" ");
 				string fileName = input.substr(index);
@@ -44,22 +42,10 @@ int main(int argc, char* argv[]){
 				int index = input.find(" ");
 				string fileName = input.substr(index);
 				sendFile = fopen(fileName.c_str(), "w");
-				fseek(sendFile, 0, SEEK_END);
-				int size = ftell(sendFile);
-				rewind(sendFile);
-				char* sendBuffer[size];
-				fwrite(sendBuffer, sizeof(char), size, sendFile);
-				while(1){
-					int bytes_read = read(sendFile, sendBuffer, sizeof(sendBuffer));
-					if(bytes_read == 0)break;
-					void *p = sendBuffer;
-					while(bytes_read > 0){
-						int bytes_written = write(mySocket->mySocketFd, p, bytes_read);
-						bytes_read -= bytes_written;
-						p += bytes_written;
-					}
-				}
-
+				char* sendBuffer[256];
+				fgets(buffer, 256, sendFile);
+				int n = write(mySocketFd, sendBuffer, strlen(sendBuffer));
+				if(n<0) cout << "Error writing file";
 			}
 		}
 		else{

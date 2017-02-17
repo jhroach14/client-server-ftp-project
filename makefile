@@ -12,5 +12,4 @@ run:
 	./myftp.out
 
 clean:
-	rm *.o
 	rm *.out
