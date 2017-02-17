@@ -7,7 +7,6 @@
 //#include "Socket.cpp"
 
 int main(int argc, char* argv[]){
-	int sockfd, portNum;
 	ssize_t len;
 	FILE* sendFile;
 	FILE* receiveFile;
@@ -24,25 +23,44 @@ int main(int argc, char* argv[]){
 		cout << "myftp>";
 		cin >> input;
 		if(input.compare("quit") == 0){
-			mySocket->shutDown();
-			exit(0);
+				mySocket->shutDown();
+				exit(0);
 		}
-		else if(input.substr(0,3).compare("get") == 0){
-			mySocket->sendOutputToServer(input);
-			int fileSize = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0);
-			int index = input.find(" ");
-			string fileName = input.substr(index);
-			receiveFile = fopen(fileName.c_str(), "w");
-			int remainSize = fileSize;
-			while((len = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0) > 0 && remainSize > 0)){
-				fwrite(mySocket->buffer, sizeof(char), len, receiveFile);
-				remainSize -= len;
+		size_t found = input.find(" ");
+		if(found != string::npos){
+			char* inputArr = new char[input.length() + 1];
+			string firstWord(strtok(inputArr, " "));
+			if(firstWord.compare("get") == 0){
+				int index = input.find(" ");
+				string fileName = input.substr(index);
+				receiveFile = fopen(fileName.c_str(), "w");
+				while((len = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0) > 0)){
+					fwrite(mySocket->buffer, sizeof(char), len, receiveFile);
+				}
+				fclose(receiveFile);
+
 			}
-			fclose(receiveFile);
+			else if(firstWord.compare("put") == 0){
+				int index = input.find(" ");
+				string fileName = input.substr(index);
+				sendFile = fopen(fileName.c_str(), "w");
+				fseek(sendFile, 0, SEEK_END);
+				int size = ftell(sendFile);
+				rewind(sendFile);
+				char* sendBuffer[size];
+				fwrite(sendBuffer, sizeof(char), size, sendFile);
+				while(1){
+					int bytes_read = read(sendFile, sendBuffer, sizeof(sendBuffer));
+					if(bytes_read == 0)break;
+					void *p = sendBuffer;
+					while(bytes_read > 0){
+						int bytes_written = write(mySocket->mySocketFd, p, bytes_read);
+						bytes_read -= bytes_written;
+						p += bytes_written;
+					}
+				}
 
-		}
-		else if(input.substr(0,3).compare("put") == 0){
-
+			}
 		}
 		else{
 			mySocket->sendOutputToServer(input);
