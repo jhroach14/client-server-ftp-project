@@ -37,7 +37,15 @@ int main( int argc, char *argv[]) {
 		if(pId == 0){
 
 			string input = mySock->getInputFromClient();
-
+			char  *argv[16];
+			getArguments(input, argv);
+			
+			
+			
+			
+			
+			
+			
 			if(!input.compare("kill")){ //shutdown process
 				if(kill(getppid(),-2)==-1){
 					fatal_error("failed to kill parent");
@@ -48,27 +56,43 @@ int main( int argc, char *argv[]) {
 			
 			//command execution goes here
 			
-			// Creates temp file that stores ls data then sends to client
+			// Redirects Standard output into socket then runs ls on server side
 			if(!input.compare("ls"){
-				mySock->sendOutputToClient("do ls");
-				system("ls > temp");
-				sendFile = fopen("temp", "r");
-				int size = ftell("temp");
-				char* sendBuffer[size];
-				fwrite(sendBuffer, sizeof(char), size, sendFile);
-				while(1){
-					int bytes_read = read(sendFile, sendBuffer, sizeof(sendBuffer));
-					if(bytes_read == 0)break;
-					void *p = sendBuffer;
-					while(bytes_read > 0){
-						int bytes_written = write(mySocket->mySocketFd, p, bytes_read);
-						bytes_read -= bytes_written;
-						p += bytes_written;
-					}
-				}
-				system("rm temp");
 				
+				dup2(mysock, STDOUT_FILENO);
+				dup2(mysock, STDERR_FILENO);
+				mySock->sendOutputToClient("do ls");
+				execvp(*argv, argv);				
 			}
+			
+			// Redirects STD Output into socket then runs pwd on server side
+			if (!input.compare("pwd")){
+				
+				mySock->sendOutputToClient("do pwd");
+				dup2(mysock, STDOUT_FILENO);
+				dup2(mysock, STDERR_FILENO);
+				execvp(*argv, argv);
+			}
+			
+			// Removes file
+			if (!input.compare(0,3,"delete")){
+				mySock->sendOutputToClient("do delete");
+				*argv = "rm";
+				execvp(*argv, argv);
+			}
+			
+			// makes new directory on FTP server
+			if(!input.compare(0,5,"mkdir")){
+				mySock->sendOutputToclient("do mkdir");
+				execvp(*argv, argv);
+			}
+			
+			// Changes directory
+			if(!input.compare(0,2,"cd")){
+				mySock->sendOutputToClient("do cd")
+				chdir(argv[1]);
+			}
+			
 			
 			
 		}
@@ -76,6 +100,36 @@ int main( int argc, char *argv[]) {
 	}
 	mySock->shutDown();
 	return 0;
+}
+
+/**
+   Breaks input down into arrays to be used by exec()
+**/
+void  getArguments(char *line, char **argv)
+{
+      // While not the end of the line
+     while (*line != NULL) {       
+           
+           //While current character is whitespace or & char
+          while (*line == ' ' || *line == '\t' || *line == '\n'){
+          
+                // Change to null char
+               *line++ = NULL; 
+          }
+          // moves argument position
+          *argv++ = line;  
+          // While current character is not whitesapce
+          while (*line != '\0' && *line != ' ' && *line != '\t' && *line != '\n'|| *line == '&') {
+          if (*line == '&'){
+              skipWaiting = 1;
+              *line = NULL;
+           }
+                // Move the cursor forward
+               line++;  
+          }
+     }
+     // Makes last argv null character
+     *argv = NULL;
 }
 
 
