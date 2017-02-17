@@ -16,6 +16,7 @@
 #include <cstdio>
 #include <signal.h>
 #include <netdb.h>
+#include "Socket.h"
 
 #define SOCKET_QUEUE 5 //max num of connections to que on socket
 
