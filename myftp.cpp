@@ -18,7 +18,9 @@ int main(int argc, char* argv[]){
 	while(true){
 		//Connect to server
 		mySocket->bindAndListen();
+		cout << "SOCKET BOUND";
 		mySocket->connectToServer(argv[0], atoi(argv[1]));
+		cout << "SOCKET CONNECTED TO SERVER";
 		//Get user input
 		cout << "myftp>";
 		cin >> input;

@@ -31,7 +31,7 @@ int main( int argc, char *argv[]) {
 	while(true){
 
 		mySock->acceptConnectionFromClient();
-
+		cout << "CONNECTION ACCEPTED";
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
 
 		if(pId == 0){
