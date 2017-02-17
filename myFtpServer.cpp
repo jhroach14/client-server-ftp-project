@@ -34,13 +34,13 @@ int main( int argc, char *argv[]) {
 		
 		
 		string input = mySock->getInputFromClient();
-		char  *argv[16];
-		getArguments(input, argv);
+		char  *args[16];
+		getArguments(input, args);
 
 		//Changes directory
 		if(!input.compare(0,2,"cd")){
 			mySock->sendOutputToClient("do cd")
-			chdir(argv[1]);
+			chdir(args[1]);
 		}
 		
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
@@ -65,7 +65,7 @@ int main( int argc, char *argv[]) {
 				dup2(mysock, STDOUT_FILENO);
 				dup2(mysock, STDERR_FILENO);
 				mySock->sendOutputToClient("do ls");
-				execvp(*argv, argv);				
+				execvp(*args, args);				
 			}
 			
 			// Redirects STD Output into socket then runs pwd on server side
@@ -74,20 +74,20 @@ int main( int argc, char *argv[]) {
 				mySock->sendOutputToClient("do pwd");
 				dup2(mysock, STDOUT_FILENO);
 				dup2(mysock, STDERR_FILENO);
-				execvp(*argv, argv);
+				execvp(*args, args);
 			}
 			
 			// Removes file
 			if (!input.compare(0,3,"delete")){
 				mySock->sendOutputToClient("do delete");
-				*argv[0] = "rm";
-				execvp(*argv, argv);
+				*args[0] = "rm";
+				execvp(*args, args);
 			}
 			
 			// makes new directory on FTP server
 			if(!input.compare(0,5,"mkdir")){
 				mySock->sendOutputToclient("do mkdir");
-				execvp(*argv, argv);
+				execvp(*args, args);
 			}
 			
 		exit(0);
@@ -102,16 +102,16 @@ int main( int argc, char *argv[]) {
 /**
    Breaks input down into arrays to be used by exec()
 **/
-void  getArguments(string line, char **argv){
+void  getArguments(string line, char **args){
 	size_t found = input.find(" ");
 	if(found != string::npos){
       inf index = input.find(" ");
-	  line.copy(*argv[0],0,index-1)
-	  line.copy(*argv[1],index,line.length());
-	  *argv[2] = NULL;
+	  line.copy(*args[0],0,index-1)
+	  line.copy(*args[1],index,line.length());
+	  *args[2] = NULL;
     }else{
-		line.copy(*argv[0],0,line.length());
-		*argv[1] = NULL;
+		line.copy(*args[0],0,line.length());
+		*args[1] = NULL;
 	}
 }
 
