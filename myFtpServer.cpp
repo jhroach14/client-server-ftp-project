@@ -31,20 +31,23 @@ int main( int argc, char *argv[]) {
 	while(true){
 
 		mySock->acceptConnectionFromClient();
+		
+		
+		string input = mySock->getInputFromClient();
+		char  *argv[16];
+		getArguments(input, argv);
 
+		//Changes directory
+		if(!input.compare(0,2,"cd")){
+			mySock->sendOutputToClient("do cd")
+			chdir(argv[1]);
+		}
+		
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
-
+		
 		if(pId == 0){
 
-			string input = mySock->getInputFromClient();
-			char  *argv[16];
-			getArguments(input, argv);
-			
-			
-			
-			
-			
-			
+				
 			
 			if(!input.compare("kill")){ //shutdown process
 				if(kill(getppid(),-2)==-1){
@@ -77,7 +80,7 @@ int main( int argc, char *argv[]) {
 			// Removes file
 			if (!input.compare(0,3,"delete")){
 				mySock->sendOutputToClient("do delete");
-				*argv = "rm";
+				*argv[0] = "rm";
 				execvp(*argv, argv);
 			}
 			
@@ -87,13 +90,7 @@ int main( int argc, char *argv[]) {
 				execvp(*argv, argv);
 			}
 			
-			// Changes directory
-			if(!input.compare(0,2,"cd")){
-				mySock->sendOutputToClient("do cd")
-				chdir(argv[1]);
-			}
-			
-			
+		exit(0);
 			
 		}
 
@@ -105,31 +102,17 @@ int main( int argc, char *argv[]) {
 /**
    Breaks input down into arrays to be used by exec()
 **/
-void  getArguments(char *line, char **argv)
-{
-      // While not the end of the line
-     while (*line != NULL) {       
-           
-           //While current character is whitespace or & char
-          while (*line == ' ' || *line == '\t' || *line == '\n'){
-          
-                // Change to null char
-               *line++ = NULL; 
-          }
-          // moves argument position
-          *argv++ = line;  
-          // While current character is not whitesapce
-          while (*line != '\0' && *line != ' ' && *line != '\t' && *line != '\n'|| *line == '&') {
-          if (*line == '&'){
-              skipWaiting = 1;
-              *line = NULL;
-           }
-                // Move the cursor forward
-               line++;  
-          }
-     }
-     // Makes last argv null character
-     *argv = NULL;
+void  getArguments(string line, char **argv){
+	size_t found = input.find(" ");
+	if(found != string::npos){
+      inf index = input.find(" ");
+	  line.copy(*argv[0],0,index-1)
+	  line.copy(*argv[1],index,line.length());
+	  *argv[2] = NULL;
+    }else{
+		line.copy(*argv[0],0,line.length());
+		*argv[1] = NULL;
+	}
 }
 
 
