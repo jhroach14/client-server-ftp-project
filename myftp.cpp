@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
 	}
 
 	//Creates socket
-	Socket * mySocket = new Socket((unsigned int)80);
+	Socket * mySocket = new Socket((unsigned int)9002);
 	string input;
 
 	//"Shell" loop
