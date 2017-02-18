@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
 		//Connect to server
 		mySocket->bindAndListen();
 		cout << "SOCKET BOUND";
-		mySocket->connectToServer(argv[0], atoi(argv[1]));
+		mySocket->connectToServer(argv[1], atoi(argv[2]));
 		cout << "SOCKET CONNECTED TO SERVER";
 		//Get user input
 		cout << "myftp>";
