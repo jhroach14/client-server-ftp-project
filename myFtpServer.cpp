@@ -31,7 +31,7 @@ int main( int argc, char *argv[]) {
 	while(true){
 
 		mySock->acceptConnectionFromClient();
-		
+		cout <<"Connection accpeted");
 		
 		string input = mySock->getInputFromClient();
 		char  *args[16];
