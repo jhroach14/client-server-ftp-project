@@ -11,16 +11,14 @@ int main(int argc, char* argv[]){
 	}
 
 	//Creates socket
-	Socket * mySocket = new Socket((unsigned int)9002);
+	Socket * mySocket = new Socket((unsigned int)9000);
 	string input;
 
 	//"Shell" loop
 	while(true){
 		//Connect to server
 		mySocket->bindAndListen();
-		cout << "SOCKET BOUND";
-		mySocket->connectToServer(argv[0], atoi(argv[1]));
-		cout << "SOCKET CONNECTED TO SERVER";
+		mySocket->connectToServer(argv[1], argv[2]);
 		//Get user input
 		cout << "myftp>";
 		cin >> input;

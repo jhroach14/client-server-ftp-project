@@ -23,13 +23,14 @@ int main( int argc, char *argv[]) {
 		cout << "Invalid server command. exiting\n";
 		return -1;
 	}
-
+	cout << "creating Socket" <<endl;
 	Socket * mySock = new Socket((unsigned int) atoi(argv[1]));
+	cout << "SOCKET CREATED ON PORT " << argv[1];
 	mySock->bindAndListen();
 
 	//main server loop. Should run until it receives a kill signal from a child
 	while(true){
-
+		cout << "entering loop..." << endl;
 		mySock->acceptConnectionFromClient();
 		cout << "CONNECTION ACCEPTED";
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable

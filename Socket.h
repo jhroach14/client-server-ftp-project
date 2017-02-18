@@ -19,6 +19,7 @@ struct Socket{
 	sockaddr_in myAddress;
 	sockaddr_in peerAddress;
 	socklen_t socketLength;
+	struct addrinfo hints, *servinfo, *p;
 	struct hostent *server;
 
 
@@ -29,7 +30,7 @@ struct Socket{
 	void sendOutputToClient(string message);
 	string getInputFromServer();
 	void sendOutputToServer(string message);
-	void connectToServer(string domainName, int port);
+	void connectToServer(string domainName, string port);
 	void shutDown();
 
 };
