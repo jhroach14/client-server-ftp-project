@@ -91,7 +91,30 @@ int main( int argc, char *argv[]) {
 			}
 			
 			if(!input.compare(0,3,"get"){
-				
+				int index = input.find(" ");
+				string fileName = input.substr(index);
+				sendFile = fopen(fileName.c_str(), "r");
+				fseek(sendFile, 0, SEEK_END);
+				long size = ftell(sendFile);
+				rewind(sendFile);
+				char sendBuffer[size];
+				fgets(sendBuffer, size, sendFile);
+				int n;
+				while((n = fread(sendBuffer, sizeof(char), size, sendFile)) > 0){
+					if(send(mySocket->mySocketFd, sendBuffer, n, 0) < 0){
+						cout << "Error sending file";
+					}
+					bzero(sendBuffer, size);
+				}
+			}
+			if(!input.compare(0,3,"get"){
+				int index = input.find(" ");
+				string fileName = input.substr(index);
+				receiveFile = fopen(fileName.c_str(), "w");
+				while((len = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0) > 0)){
+					fwrite(mySocket->buffer, sizeof(char), len, receiveFile);
+				}
+				fclose(receiveFile);
 			}
 			
 		exit(0);
