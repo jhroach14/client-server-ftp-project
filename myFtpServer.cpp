@@ -84,16 +84,15 @@ int main( int argc, char *argv[]) {
 				remove.append(filepath);
 				system(remove.c_str());
 			}
-			
 			// makes new directory on FTP server
 			if(!input.compare(0,5,"mkdir")){
 				system(input.c_str());
 			}
-			
-			//if(!input.compare(0,3,"get")){
-				/*int index = input.find(" ");
+			//Client requests file
+			if(!input.compare(0,3,"get")){
+				int index = input.find(" ");
 				string fileName = input.substr(index);
-				sendFile = fopen(fileName.c_str(), "r");
+				FILE * sendFile = fopen(fileName.c_str(), "r");
 				fseek(sendFile, 0, SEEK_END);
 				long size = ftell(sendFile);
 				rewind(sendFile);
@@ -107,18 +106,16 @@ int main( int argc, char *argv[]) {
 					bzero(sendBuffer, size);
 				}
 			}
+			//Client putting file on server
 			if(!input.compare(0,3,"put")){
 				int index = input.find(" ");
 				string fileName = input.substr(index);
-				receiveFile = fopen(fileName.c_str(), "w");
+				FILE * receiveFile = fopen(fileName.c_str(), "w");
 				while((len = recv(mySocket->mySocketFd, mySocket->buffer, 256, 0) > 0)){
 					fwrite(mySocket->buffer, sizeof(char), len, receiveFile);
 				}
 				fclose(receiveFile);
-			}*/
-			
-		exit(0);
-			
+			}			
 		}
 
 	}
