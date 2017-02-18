@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
 			else if(firstWord.compare("put") == 0){
 				int index = input.find(" ");
 				string fileName = input.substr(index);
-				sendFile = fopen(fileName.c_str(), "w");
+				sendFile = fopen(fileName.c_str(), "r");
 				fseek(sendFile, 0, SEEK_END);
 				long size = ftell(sendFile);
 				rewind(sendFile);
