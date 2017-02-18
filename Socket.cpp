@@ -85,7 +85,6 @@ void Socket::sendOutputToServer(string message){
 
 }
 
-
 void Socket::connectToServer(string domainName, string port){
 	int n;
 	memset(&hints, 0, sizeof(hints));

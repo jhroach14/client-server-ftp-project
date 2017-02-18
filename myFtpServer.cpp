@@ -6,6 +6,22 @@ using namespace std;
 //prints error message + errno and exits
 
 
+/**
+   Breaks input down into arrays to be used by exec()
+**/
+void getArguments(string line, char **args){
+	size_t found = line.find(" ");
+	if(found != string::npos){
+      int index = line.find(" ");
+	  line.copy(*args[0],0,index-1);
+	  line.copy(*args[1],index,line.length());
+	  *args[2] = NULL;
+    }else{
+		line.copy(*args[0],0,line.length());
+		*args[1] = NULL;
+	}
+}
+
 
 
 
@@ -31,7 +47,7 @@ int main( int argc, char *argv[]) {
 	while(true){
 
 		mySock->acceptConnectionFromClient();
-		cout <<"Connection accpeted");
+		cout <<"Connection accpeted";
 		
 		string input = mySock->getInputFromClient();
 		char  *args[16];
@@ -124,21 +140,5 @@ int main( int argc, char *argv[]) {
 	}
 	mySock->shutDown();
 	return 0;
-}
-
-/**
-   Breaks input down into arrays to be used by exec()
-**/
-void  getArguments(string line, char **args){
-	size_t found = input.find(" ");
-	if(found != string::npos){
-      inf index = input.find(" ");
-	  line.copy(*args[0],0,index-1)
-	  line.copy(*args[1],index,line.length());
-	  *args[2] = NULL;
-    }else{
-		line.copy(*args[0],0,line.length());
-		*args[1] = NULL;
-	}
 }
 

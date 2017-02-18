@@ -11,16 +11,14 @@ int main(int argc, char* argv[]){
 	}
 
 	//Creates socket
-	Socket * mySocket = new Socket((unsigned int)argv[2]);
+	Socket * mySocket = new Socket((unsigned int)9000);
 	string input;
 
 	//"Shell" loop
 	while(true){
 		//Connect to server
 		mySocket->bindAndListen();
-		cout << "SOCKET BOUND";
-		mySocket->connectToServer(argv[1], atoi(argv[2]));
-		cout << "SOCKET CONNECTED TO SERVER";
+		mySocket->connectToServer(argv[1], argv[2]);
 		//Get user input
 		cout << "myftp>";
 		cin >> input;
@@ -49,7 +47,7 @@ int main(int argc, char* argv[]){
 			else if(firstWord.compare("put") == 0){
 				int index = input.find(" ");
 				string fileName = input.substr(index);
-				sendFile = fopen(fileName.c_str(), "r");
+				sendFile = fopen(fileName.c_str(), "w");
 				fseek(sendFile, 0, SEEK_END);
 				long size = ftell(sendFile);
 				rewind(sendFile);
@@ -64,6 +62,19 @@ int main(int argc, char* argv[]){
 				}
 			}
 		}
+		if(!input.compare("ls")){
+			char responseBuffer[256];
+			int bytesRead = -1;
+			bytesRead = recv(mySocket->mySocketFd, responseBuffer, sizeof(responseBuffer), 0);
+			if(bytesRead == -1){
+				cout << "Error reading server response..." << endl;
+			}
+			responseBuffer[bytesRead] = '\0';
+			for(int i=0; i<bytesRead; i++){
+				printf("%c",responseBuffer[i]);
+			}
+		}
+
 		//Shutdown connection to be repopened on next iteration of loop
 		shutdown(mySocket->mySocketFd, 2);
 	}
