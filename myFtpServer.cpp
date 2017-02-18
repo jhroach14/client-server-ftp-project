@@ -6,21 +6,6 @@ using namespace std;
 //prints error message + errno and exits
 
 
-/**
-   Breaks input down into arrays to be used by exec()
-**/
-void getArguments(string line, char **args){
-	size_t found = line.find(" ");
-	if(found != string::npos){
-      int index = line.find(" ");
-	  line.copy(*args[0],0,index-1);
-	  line.copy(*args[1],index,line.length());
-	  *args[2] = NULL;
-    }else{
-		line.copy(*args[0],0,line.length());
-		*args[1] = NULL;
-	}
-}
 
 
 
@@ -50,13 +35,11 @@ int main( int argc, char *argv[]) {
 		cout <<"Connection accpeted";
 		
 		string input = mySock->getInputFromClient();
-		char  *args[16];
-		getArguments(input, args);
+
 
 		//Changes directory
 		if(!input.compare(0,2,"cd")){
 			mySock->sendOutputToClient("do cd")
-			chdir(args[1]);
 		}
 		
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
@@ -81,7 +64,7 @@ int main( int argc, char *argv[]) {
 				dup2(mysock, STDOUT_FILENO);
 				dup2(mysock, STDERR_FILENO);
 				mySock->sendOutputToClient("do ls");
-				execvp(*args, args);				
+				system("ls");			
 			}
 			
 			// Redirects STD Output into socket then runs pwd on server side
@@ -90,20 +73,19 @@ int main( int argc, char *argv[]) {
 				mySock->sendOutputToClient("do pwd");
 				dup2(mysock, STDOUT_FILENO);
 				dup2(mysock, STDERR_FILENO);
-				execvp(*args, args);
+				system("pwd");
 			}
 			
 			// Removes file
 			if (!input.compare(0,3,"delete")){
 				mySock->sendOutputToClient("do delete");
-				*args[0] = "rm";
-				execvp(*args, args);
+
 			}
 			
 			// makes new directory on FTP server
 			if(!input.compare(0,5,"mkdir")){
 				mySock->sendOutputToclient("do mkdir");
-				execvp(*args, args);
+
 			}
 			
 			if(!input.compare(0,3,"get"){
