@@ -27,6 +27,7 @@ int main( int argc, char *argv[]) {
 
 	Socket * mySock = new Socket((unsigned int) atoi(argv[1]));
 	mySock->bindAndListen();
+	cout << "Server socket bound..." << endl;
 
 	//main server loop. Should run until it receives a kill signal from a child
 	while(true){
@@ -35,7 +36,7 @@ int main( int argc, char *argv[]) {
 		cout <<"Connection accpeted";
 		
 		string input = mySock->getInputFromClient();
-
+		cout << "input: " << input << " received.." << endl;
 
 		//Changes directory
 		if(!input.compare(0,2,"cd")){
@@ -60,7 +61,7 @@ int main( int argc, char *argv[]) {
 			
 			// Redirects Standard output into socket then runs ls on server side
 			if(!input.compare("ls")){
-				
+				cout << "Running ls..." << endl;
 				dup2(mySock->mySocketFd, STDOUT_FILENO);
 				dup2(mySock->mySocketFd, STDERR_FILENO);
 				//mySock->sendOutputToClient("do ls");

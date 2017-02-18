@@ -37,11 +37,11 @@ void Socket::bindAndListen(){
 
 //gets client connection
 void Socket::acceptConnectionFromClient(){
-
+	cout << "acceptConnectionFromClient() called..." << endl;
 	if ((newSocketFd = accept(mySocketFd, (struct sockaddr *) &peerAddress, &socketLength) == -1)) {
 		fatal_error("Client accept connection failed");
 	}
-
+	cout << "accept function exiting..." << endl;
 }
 
 //gets client input

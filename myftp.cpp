@@ -27,8 +27,10 @@ int main(int argc, char* argv[]){
 				exit(0);
 		}
 		mySocket->sendOutputToServer(input);
+		cout << "User input sent to server..." << endl;
 		size_t found = input.find(" ");
 		if(found != string::npos){
+			cout << "User input contains a space..." << endl;
 			char* inputArr = new char[input.length() + 1];
 			string firstWord(strtok(inputArr, " "));
 			
