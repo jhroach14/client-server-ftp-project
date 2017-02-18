@@ -40,7 +40,9 @@ int main( int argc, char *argv[]) {
 
 		//Changes directory
 		if(!input.compare(0,2,"cd")){
-			mySock->sendOutputToClient("do cd");
+			int index = input.find(" ");
+			string filepath = input.substr(index);
+			chdir(filepath.c_str());
 		}
 		
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
@@ -64,29 +66,28 @@ int main( int argc, char *argv[]) {
 				cout << "Running ls..." << endl;
 				dup2(mySock->mySocketFd, STDOUT_FILENO);
 				dup2(mySock->mySocketFd, STDERR_FILENO);
-				//mySock->sendOutputToClient("do ls");
 				system("ls");			
 			}
 			
 			// Redirects STD Output into socket then runs pwd on server side
 			if (!input.compare("pwd")){
-				
-				mySock->sendOutputToClient("do pwd");
 				dup2(mySock->mySocketFd, STDOUT_FILENO);
 				dup2(mySock->mySocketFd, STDERR_FILENO);
 				system("pwd");
 			}
 			
 			// Removes file
-			if (!input.compare(0,3,"delete")){
-				mySock->sendOutputToClient("do delete");
-
+			if (!input.compare(0,6,"delete")){
+				int index = input.find(" ");
+				string filepath = input.substr(index);
+				string remove = "rm";
+				remove.append(filepath);
+				system(remove.c_str());
 			}
 			
 			// makes new directory on FTP server
 			if(!input.compare(0,5,"mkdir")){
-				mySock->sendOutputToClient("do mkdir");
-
+				system(input.c_str());
 			}
 			
 			//if(!input.compare(0,3,"get")){
