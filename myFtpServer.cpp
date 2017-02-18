@@ -90,6 +90,10 @@ int main( int argc, char *argv[]) {
 				execvp(*args, args);
 			}
 			
+			if(!input.compare(0,3,"get"){
+				
+			}
+			
 		exit(0);
 			
 		}
