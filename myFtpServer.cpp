@@ -69,7 +69,7 @@ int main( int argc, char *argv[]) {
 				system("ls");			
 			}
 			
-			// Redirects STD Output into socket then runs pwd on server side
+			// Redirects Standard output into socket then runs pwd on server side
 			if (!input.compare("pwd")){
 				dup2(mySock->mySocketFd, STDOUT_FILENO);
 				dup2(mySock->mySocketFd, STDERR_FILENO);
