@@ -38,18 +38,18 @@ int main( int argc, char *argv[]) {
 		string input = mySock->getInputFromClient();
 		cout << "input: " << input << " received.." << endl;
 
-		//Changes directory
-		if(!input.compare(0,2,"cd")){
-			int index = input.find(" ");
-			string filepath = input.substr(index);
-			chdir(filepath.c_str());
-		}
+
 		
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
 		
 		if(pId == 0){
 
-				
+			//Changes directory
+			if(!input.compare(0,2,"cd")){
+				int index = input.find(" ");
+				string filepath = input.substr(index);
+				chdir(filepath.c_str());
+			}
 			
 			if(!input.compare("kill")){ //shutdown process
 				if(kill(getppid(),-2)==-1){
