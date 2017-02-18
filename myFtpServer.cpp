@@ -39,7 +39,7 @@ int main( int argc, char *argv[]) {
 
 		//Changes directory
 		if(!input.compare(0,2,"cd")){
-			mySock->sendOutputToClient("do cd")
+			mySock->sendOutputToClient("do cd");
 		}
 		
 		int pId = fork(); //multi threading. RUN CODE ON CLUSTER unless forkbombing nike is desirable
@@ -59,11 +59,11 @@ int main( int argc, char *argv[]) {
 			//command execution goes here
 			
 			// Redirects Standard output into socket then runs ls on server side
-			if(!input.compare("ls"){
+			if(!input.compare("ls")){
 				
-				dup2(mysock, STDOUT_FILENO);
-				dup2(mysock, STDERR_FILENO);
-				mySock->sendOutputToClient("do ls");
+				dup2(mySock->mySocketFd, STDOUT_FILENO);
+				dup2(mySock->mySocketFd, STDERR_FILENO);
+				//mySock->sendOutputToClient("do ls");
 				system("ls");			
 			}
 			
@@ -71,8 +71,8 @@ int main( int argc, char *argv[]) {
 			if (!input.compare("pwd")){
 				
 				mySock->sendOutputToClient("do pwd");
-				dup2(mysock, STDOUT_FILENO);
-				dup2(mysock, STDERR_FILENO);
+				dup2(mySock->mySocketFd, STDOUT_FILENO);
+				dup2(mySock->mySocketFd, STDERR_FILENO);
 				system("pwd");
 			}
 			
@@ -84,12 +84,12 @@ int main( int argc, char *argv[]) {
 			
 			// makes new directory on FTP server
 			if(!input.compare(0,5,"mkdir")){
-				mySock->sendOutputToclient("do mkdir");
+				mySock->sendOutputToClient("do mkdir");
 
 			}
 			
-			if(!input.compare(0,3,"get"){
-				int index = input.find(" ");
+			//if(!input.compare(0,3,"get")){
+				/*int index = input.find(" ");
 				string fileName = input.substr(index);
 				sendFile = fopen(fileName.c_str(), "r");
 				fseek(sendFile, 0, SEEK_END);
@@ -105,7 +105,7 @@ int main( int argc, char *argv[]) {
 					bzero(sendBuffer, size);
 				}
 			}
-			if(!input.compare(0,3,"get"){
+			if(!input.compare(0,3,"put")){
 				int index = input.find(" ");
 				string fileName = input.substr(index);
 				receiveFile = fopen(fileName.c_str(), "w");
@@ -113,7 +113,7 @@ int main( int argc, char *argv[]) {
 					fwrite(mySocket->buffer, sizeof(char), len, receiveFile);
 				}
 				fclose(receiveFile);
-			}
+			}*/
 			
 		exit(0);
 			
