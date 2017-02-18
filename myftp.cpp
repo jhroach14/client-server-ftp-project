@@ -76,6 +76,19 @@ int main(int argc, char* argv[]){
 				printf("%c",responseBuffer[i]);
 			}
 		}
+		
+		if(!input.compare("pwd")){
+			char responseBuffer[256];
+			int bytesRead = -1;
+			bytesRead = recv(mySocket->mySocketFd, responseBuffer, sizeof(responseBuffer), 0);
+			if(bytesRead == -1){
+				cout << "Error reading server response..." << endl;
+			}
+			responseBuffer[bytesRead] = '\0';
+			for(int i=0; i<bytesRead; i++){
+				printf("%c",responseBuffer[i]);
+			}
+		}
 
 		//Shutdown connection to be repopened on next iteration of loop
 		shutdown(mySocket->mySocketFd, 2);
